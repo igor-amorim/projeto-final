@@ -7,12 +7,19 @@ import com.br.compras.models.Usuario;
 import com.br.compras.service.UsuarioService;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     UsuarioDao usuarioDao;
+
+    private PasswordEncoder passwordEncoder;
+
+    public UsuarioServiceImpl(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public List<Usuario> getUsuarios() {
@@ -26,12 +33,16 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public boolean newUsuario(Usuario usuario) {
-        try {
-            usuarioDao.save(usuario);
+        // try {
+            // usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+            usuarioDao.save(new Usuario(
+                    usuario.getEmail(),
+                    passwordEncoder.encode(usuario.getSenha()),
+                    usuario.getPerfil()));
             return true;
-        } catch (Exception e) {
-            return false;
-        }
+        // } catch (Exception e) {
+        //     return false;
+        // }
     }
 
     @Override

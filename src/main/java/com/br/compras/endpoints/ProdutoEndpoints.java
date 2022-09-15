@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -37,7 +38,7 @@ public class ProdutoEndpoints {
 
     @RequestMapping(path = "/produto/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Optional<Produto>> getProduto(@PathVariable long id) {
-        logger.info("GET /produto/"+id);
+        logger.info("GET /produto/" + id);
         Optional<Produto> produto = produtoService.getProduto(id);
         return new ResponseEntity<Optional<Produto>>(produto, HttpStatus.OK);
     }
@@ -62,9 +63,10 @@ public class ProdutoEndpoints {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(path = "/produto/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<String> delProduto(@PathVariable long id) {
-        logger.info("DELETE /produto/"+id);
+        logger.info("DELETE /produto/" + id);
         if (produtoService.delProduto(id)) {
             return new ResponseEntity<String>("Produto excluído com sucesso!", HttpStatus.OK);
         } else {

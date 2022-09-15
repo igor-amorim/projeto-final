@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -62,6 +63,7 @@ public class PedidoEndpoints {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(path = "/pedido/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<String> delPedido(@PathVariable long id) {
         logger.info("DELETE /pedido/" + id);
