@@ -1,10 +1,8 @@
 package com.br.compras.endpoints;
 
 import java.util.List;
-import org.slf4j.Logger;
 import java.util.Optional;
 import javax.validation.Valid;
-import org.slf4j.LoggerFactory;
 import com.br.compras.dto.ProdutoDto;
 import com.br.compras.models.Produto;
 import org.springframework.http.HttpStatus;
@@ -27,25 +25,20 @@ public class ProdutoEndpoints {
     @Autowired
     ProdutoService produtoService;
 
-    Logger logger = LoggerFactory.getLogger(ProdutoEndpoints.class);
-
     @RequestMapping(path = "/produto", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Produto>> getProdutos() {
-        logger.info("GET /produto");
         List<Produto> produtos = produtoService.getProdutos();
         return new ResponseEntity<List<Produto>>(produtos, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/produto/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Optional<Produto>> getProduto(@PathVariable long id) {
-        logger.info("GET /produto/" + id);
         Optional<Produto> produto = produtoService.getProduto(id);
         return new ResponseEntity<Optional<Produto>>(produto, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/produto", method = RequestMethod.POST)
     public ResponseEntity<String> newProduto(@RequestBody @Valid ProdutoDto produtoDto) {
-        logger.info("POST /produto");
         if (produtoService.newProduto(produtoDto)) {
             return new ResponseEntity<String>("Produto criado com sucesso.", HttpStatus.CREATED);
         } else {
@@ -55,7 +48,6 @@ public class ProdutoEndpoints {
 
     @RequestMapping(path = "/produto", method = RequestMethod.PUT)
     public ResponseEntity<String> setProduto(@RequestBody @Valid Produto produto) {
-        logger.info("PUT /produto");
         if (produtoService.setProduto(produto)) {
             return new ResponseEntity<String>("Produto atualizado com sucesso.", HttpStatus.CREATED);
         } else {
@@ -66,7 +58,6 @@ public class ProdutoEndpoints {
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(path = "/produto/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<String> delProduto(@PathVariable long id) {
-        logger.info("DELETE /produto/" + id);
         if (produtoService.delProduto(id)) {
             return new ResponseEntity<String>("Produto excluído com sucesso!", HttpStatus.OK);
         } else {
